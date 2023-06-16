@@ -10,6 +10,7 @@ import {
   deleteEmployee,
   getEmployees,
 } from "../../../features/employee/employee";
+import CircularIndeterminate from "../../loading/loading";
 
 const Employee = () => {
   const dispatch = useDispatch();
@@ -23,10 +24,14 @@ const Employee = () => {
     position: "",
     email: "",
   });
-  const employee = useSelector((state) => state.employee.employee);
+  const { employee, loading } = useSelector((state) => state.employee);
+
   useEffect(() => {
     dispatch(getEmployees(selectedPage));
   }, [selectedPage, dispatch]);
+  if (loading) {
+    return <CircularIndeterminate />;
+  }
 
   return (
     <div>
@@ -36,6 +41,7 @@ const Employee = () => {
         data={data}
         setData={setData}
         inputData={employeeData}
+        type={"employee"}
       />
       <AddBoxIcon onClick={() => setOpen(true)} />
       {employee.data?.map(({ id, name, surname, email, position }) => {
@@ -68,7 +74,7 @@ const Employee = () => {
         );
       })}
       <div className={scss.pagination}>
-        {!!employee.length && (
+        {!!employee.data?.length && (
           <PaginatedItems
             itemsPerPage={10}
             totalCount={employee["headers"]["x-total-count"]}

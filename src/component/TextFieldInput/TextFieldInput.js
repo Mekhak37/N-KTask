@@ -2,7 +2,12 @@ import React from "react";
 import { TextField } from "@mui/material";
 import { Controller } from "react-hook-form";
 
-const TextFieldInput = ({ name, defaultValue = "", control }) => {
+const TextFieldInput = ({
+  name,
+  label = "",
+  defaultValue = "",
+  control = "",
+}) => {
   return (
     <Controller
       name={name}
@@ -11,7 +16,7 @@ const TextFieldInput = ({ name, defaultValue = "", control }) => {
         <TextField
           onChange={onChange}
           value={value}
-          label={name}
+          label={label || name}
           defaultValue={defaultValue}
         />
       )}

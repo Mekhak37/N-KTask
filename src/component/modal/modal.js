@@ -5,11 +5,13 @@ import { useDispatch } from "react-redux";
 import TextFieldInput from "../TextFieldInput/TextFieldInput";
 import Modal from "@mui/material/Modal";
 import { useForm } from "react-hook-form";
-import {
+import employee, {
   addEmployee,
   getEmployees,
   updateEmployee,
 } from "../../features/employee/employee";
+import TextFieldData from "../TextFieldData/TextFieldData";
+import { addTask, getTasks, updateTask } from "../../features/task/task";
 
 const style = {
   position: "absolute",
@@ -23,7 +25,18 @@ const style = {
   p: 4,
 };
 
-const BasicModal = ({ open, setOpen, data, setData, inputData }) => {
+const BasicModal = ({
+  open,
+  setOpen,
+  data,
+  setData,
+  inputData = [],
+  type,
+  startDateValue,
+  setStartDateValue,
+  endDateValue,
+  setEndDateValue,
+}) => {
   const id = data.id;
   const dispatch = useDispatch();
   const handleClose = () => {
@@ -31,16 +44,33 @@ const BasicModal = ({ open, setOpen, data, setData, inputData }) => {
     setData({});
   };
   const { handleSubmit, reset, control } = useForm();
+
   const onSubmit = (data) => {
-    (id
-      ? dispatch(updateEmployee({ data, id }))
-      : dispatch(addEmployee(data))
-    ).then(() => {
-      dispatch(getEmployees());
-    });
-    setData({});
-    reset();
-    setOpen(false);
+    return type === "employee"
+      ? (id
+          ? dispatch(updateEmployee({ data, id }))
+          : dispatch(addEmployee(data))
+        ).then(() => {
+          dispatch(getEmployees());
+          setData({});
+          reset();
+          setOpen(false);
+        })
+      : type === "task"
+      ? (id
+          ? ((data.startDate = startDateValue),
+            (data.endDate = endDateValue),
+            dispatch(updateTask({ data, id })))
+          : ((data.startDate = startDateValue),
+            (data.endDate = endDateValue),
+            dispatch(addTask(data)))
+        ).then(() => {
+          dispatch(getTasks());
+          setData({});
+          reset();
+          setOpen(false);
+        })
+      : null;
   };
 
   return (
@@ -64,15 +94,35 @@ const BasicModal = ({ open, setOpen, data, setData, inputData }) => {
             autoComplete="off"
           >
             {inputData.map((value, index) => {
+              let newValue = value
+                .replace(/_/g, " ")
+                .replace(/^[a-z]/, (match) => match.toUpperCase());
               return (
                 <TextFieldInput
                   key={index}
                   control={control}
                   name={value}
+                  label={newValue}
                   defaultValue={data[value] || ""}
                 />
               );
             })}
+
+            {type === "task" && (
+              <TextFieldData
+                label={"Start Date"}
+                dateValue={startDateValue}
+                setDateValue={setStartDateValue}
+              />
+            )}
+            {type === "task" && (
+              <TextFieldData
+                label={"End Date"}
+                dateValue={endDateValue}
+                setDateValue={setEndDateValue}
+              />
+            )}
+
             <Button onClick={handleSubmit(onSubmit)}>Submit</Button>
           </Box>
         </Box>

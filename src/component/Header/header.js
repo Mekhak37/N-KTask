@@ -1,6 +1,6 @@
 import { menuState } from "../state/state";
 import { Link } from "react-router-dom";
-import scss from "./header.module.scss"
+import scss from "./header.module.scss";
 const Header = () => {
   return (
     <ul className={scss.header}>

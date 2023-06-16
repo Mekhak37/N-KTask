@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const getTasks = createAsyncThunk(
-  "get",
+  "getTasks/forTasksPage",
   async (selectedPage, thunkAPI) => {
     try {
       const response = await axios.get(
@@ -14,19 +14,22 @@ export const getTasks = createAsyncThunk(
     }
   }
 );
-export const addTask = createAsyncThunk("post", async (data, thunkAPI) => {
-  try {
-    const response = await axios.post(
-      "https://rocky-temple-83495.herokuapp.com/tasks",
-      data
-    );
-    return response;
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error);
+export const addTask = createAsyncThunk(
+  "addTask/forTasksPage",
+  async (data, thunkAPI) => {
+    try {
+      const response = await axios.post(
+        "https://rocky-temple-83495.herokuapp.com/tasks",
+        data
+      );
+      return response;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
   }
-});
+);
 export const updateTask = createAsyncThunk(
-  "patch",
+  "updateTask/forTasksPage",
   async (newData, thunkAPI) => {
     try {
       const response = await axios.patch(
@@ -39,20 +42,25 @@ export const updateTask = createAsyncThunk(
     }
   }
 );
-export const deleteTask = createAsyncThunk("delete", async (id, thunkAPI) => {
-  try {
-    const response = await axios.delete(
-      `https://rocky-temple-83495.herokuapp.com/tasks/${id}`
-    );
-    return response;
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error);
+export const deleteTask = createAsyncThunk(
+  "deleteTask/forTasksPage",
+  async (id, thunkAPI) => {
+    try {
+      const response = await axios.delete(
+        `https://rocky-temple-83495.herokuapp.com/tasks/${id}`
+      );
+      return response;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
   }
-});
+);
+
 
 const taskSlice = createSlice({
   name: "task",
   initialState: {
+    fileredData: [],
     task: [],
     error: "",
     loading: false,

@@ -1,9 +1,8 @@
-import { createAsyncThunk, createSlice, } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-
 export const getEmployees = createAsyncThunk(
-  "get",
+  "getEmployees/forEmployeesPage",
   async (selectedPage, thunkAPI) => {
     try {
       const response = await axios.get(
@@ -15,19 +14,22 @@ export const getEmployees = createAsyncThunk(
     }
   }
 );
-export const addEmployee = createAsyncThunk("post", async (data, thunkAPI) => {
-  try {
-    const response = await axios.post(
-      "https://rocky-temple-83495.herokuapp.com/employees",
-      data
-    );
-    return response;
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error);
+export const addEmployee = createAsyncThunk(
+  "addEmployee/forEmployeesPage",
+  async (data, thunkAPI) => {
+    try {
+      const response = await axios.post(
+        "https://rocky-temple-83495.herokuapp.com/employees",
+        data
+      );
+      return response;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
   }
-});
+);
 export const updateEmployee = createAsyncThunk(
-  "patch",
+  "updateEmployee/forEmployeesPage",
   async (newData, thunkAPI) => {
     try {
       const response = await axios.patch(
@@ -41,7 +43,7 @@ export const updateEmployee = createAsyncThunk(
   }
 );
 export const deleteEmployee = createAsyncThunk(
-  "delete",
+  "deleteEmployee/forEmployeesPage",
   async (id, thunkAPI) => {
     try {
       const response = await axios.delete(
